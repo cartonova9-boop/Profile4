@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Premium Profile · Full Stack Developer</title>
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    /* ===== RESET & BASE ===== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    :root {
+      --bg-primary: #f0f4f8;
+      --bg-secondary: #ffffff;
+      --bg-card: rgba(255, 255, 255, 0.85);
+      --text-primary: #0a1a2f;
+      --text-secondary: #2c4b6e;
+      --text-muted: #6b85a2;
+      --border-color: #dce6f0;
+      --shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      --glass-bg: rgba(255, 255, 255, 0.7);
+      --gradient-start: #f0f4f8;
+      --gradient-end: #d9e2ec;
+    }
+
+    [data-theme="dark"] {
+      --bg-primary: #0a0f1a;
+      --bg-secondary: #141b2b;
+      --bg-card: rgba(20, 27, 43, 0.92);
+      --text-primary: #e8edf5;
+      --text-secondary: #b0c4de;
+      --text-muted: #8899b0;
+      --border-color: #2a3a55;
+      --shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+      --glass-bg: rgba(20, 27, 43, 0.7);
+      --gradient-start: #0a0f1a;
+      --gradient-end: #141b2b;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+      min-height: 100vh;
+      padding: 1.5rem;
+      transition: background 0.5s ease;
+      position: relative;
+    }
+
+    /* ===== CURSOR GLOW ===== */
+    .cursor-glow {
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(59, 130, 196, 0.08) 0%, transparent 70%);
+      position: fixed;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: left 0.1s ease, top 0.1s ease;
+    }
+
+    /* ===== PARTICLES ===== */
+    #particles-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* ===== READING PROGRESS ===== */
+    #progressBar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #3b82c4, #6b4c9a, #e1306c);
+      width: 0%;
+      z-index: 10000;
+      transition: width 0.1s ease;
+    }
+
+    /* ===== MAIN CARD ===== */
+    .profile-card {
+      max-width: 1000px;
+      width: 100%;
+      margin: 0 auto;
+      background: var(--bg-card);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-radius: 3rem;
+      padding: 2.5rem;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.4s ease;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ===== TOP BAR ===== */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .theme-toggle {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 40px;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      font-size: 1.1rem;
+      color: var(--text-primary);
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .theme-toggle:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .clock-display {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 40px;
+      padding: 0.5rem 1.2rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--text-primary);
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.5px;
+    }
+
+    .clock-display i {
+      margin-right: 0.5rem;
+      color: #3b82c4;
+    }
+
+    /* ===== HEADER ===== */
+    .profile-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 2rem 2.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .avatar-wrapper {
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .avatar {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 5px solid var(--bg-secondary);
+      box-shadow: 0 10px 25px rgba(0, 20, 40, 0.2);
+      transition: transform 0.3s ease;
+      background: #b8c9e0;
+      display: block;
+    }
+
+    .avatar:hover {
+      transform: scale(1.03) rotate(-2deg);
+    }
+
+    .status-badge {
+      position: absolute;
+      bottom: 8px;
+      right: 4px;
+      background: #22c55e;
+      border: 3px solid var(--bg-secondary);
+      border-radius: 40px;
+      padding: 0.25rem 1rem;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: white;
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      white-space: nowrap;
+      animation: pulse-badge 2s infinite;
+    }
+
+    @keyframes pulse-badge {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    .title-group h1 {
+      font-size: 2.8rem;
+      font-weight: 900;
+      color: var(--text-primary);
+      letter-spacing: -0.5px;
+      line-height: 1.1;
+    }
+
+    .typing-container {
+      font-size: 1.2rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      margin-top: 0.3rem;
+      min-height: 2.5rem;
+    }
+
+    .typing-container .cursor {
+      display: inline-block;
+      width: 3px;
+      height: 1.2rem;
+      background: #3b82c4;
+      animation: blink 1s infinite;
+      vertical-align: text-bottom;
+    }
+
+    @keyframes blink {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0; }
+    }
+
+    .location {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(59, 130, 196, 0.08);
+      padding: 0.3rem 1.2rem 0.3rem 0.9rem;
+      border-radius: 40px;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-top: 0.5rem;
+      border: 1px solid rgba(59, 130, 196, 0.15);
+    }
+
+    /* ===== ACTION BUTTONS ===== */
+    .action-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.7rem;
+      margin: 1rem 0 1.5rem;
+    }
+
+    .action-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 1.5rem;
+      border-radius: 40px;
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .action-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px -8px rgba(10, 26, 47, 0.2);
+      border-color: #3b82c4;
+    }
+
+    .action-btn.primary {
+      background: #3b82c4;
+      color: white;
+      border-color: #3b82c4;
+    }
+
+    .action-btn.primary:hover {
+      background: #2563a0;
+      border-color: #2563a0;
+    }
+
+    /* ===== SOCIAL LINKS ===== */
+    .social-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.7rem 1rem;
+      margin: 1rem 0 1.5rem;
+    }
+
+    .social-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1.3rem 0.5rem 1.1rem;
+      border-radius: 40px;
+      background: var(--bg-secondary);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-color);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+    }
+
+    .social-btn i { font-size: 1.1rem; width: 1.2rem; text-align: center; }
+
+    .social-btn:hover {
+      background: #0a1a2f;
+      color: white;
+      border-color: #0a1a2f;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px -8px rgba(10, 26, 47, 0.3);
+    }
+
+    .social-btn.github:hover { background: #171515; border-color: #171515; }
+    .social-btn.linkedin:hover { background: #0077b5; border-color: #0077b5; }
+    .social-btn.twitter:hover { background: #1DA1F2; border-color: #1DA1F2; }
+    .social-btn.instagram:hover { background: #E1306C; border-color: #E1306C; }
+    .social-btn.youtube:hover { background: #FF0000; border-color: #FF0000; }
+
+    /* ===== BIO ===== */
+    .bio-section {
+      background: var(--glass-bg);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      padding: 1.5rem 2rem;
+      border-radius: 2rem;
+      margin: 1.2rem 0 1.8rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: inset 0 1px 4px rgba(255, 255, 255, 0.05);
+    }
+
+    .bio-section p {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: var(--text-secondary);
+      font-weight: 450;
+    }
+
+    .bio-section i { color: #3b82c4; margin-right: 0.3rem; }
+
+    /* ===== STATS ===== */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1.2rem;
+      margin: 1.8rem 0 2rem;
+    }
+
+    .stat-item {
+      background: var(--bg-secondary);
+      padding: 1.2rem 0.8rem;
+      border-radius: 2rem;
+      text-align: center;
+      border: 1px solid var(--border-color);
+      transition: all 0.3s ease;
+    }
+
+    .stat-item:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px -12px rgba(10, 26, 47, 0.15);
+      border-color: #3b82c4;
+    }
+
+    .stat-number {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 0.4px;
+      margin-top: 0.3rem;
+      text-transform: uppercase;
+    }
+
+    /* ===== SKILL BARS ===== */
+    .skills-section {
+      margin: 1.8rem 0;
+    }
+
+    .skill-bar-item {
+      margin-bottom: 1rem;
+    }
+
+    .skill-bar-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.3rem;
+    }
+
+    .skill-bar-track {
+      width: 100%;
+      height: 8px;
+      background: var(--border-color);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .skill-bar-fill {
+      height: 100%;
+      border-radius: 10px;
+      background: linear-gradient(90deg, #3b82c4, #6b4c9a);
+      transition: width 1.5s ease;
+      width: 0%;
+    }
+
+    /* ===== TIMELINE ===== */
+    .timeline-section {
+      margin: 2rem 0;
+    }
+
+    .timeline-item {
+      display: flex;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+      padding: 1.2rem 1.5rem;
+      background: var(--bg-secondary);
+      border-radius: 1.5rem;
+      border: 1px solid var(--border-color);
+      transition: all 0.3s ease;
+    }
+
+    .timeline-item:hover {
+      transform: translateX(5px);
+      border-color: #3b82c4;
+    }
+
+    .timeline-icon {
+      font-size: 1.5rem;
+      color: #3b82c4;
+      min-width: 2.5rem;
+    }
+
+    .timeline-content h4 {
+      font-weight: 700;
+      color: var(--text-primary);
+      font-size: 1rem;
+    }
+
+    .timeline-content .company {
+      font-weight: 500;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    .timeline-content .date {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+    }
+
+    /* ===== TESTIMONIALS ===== */
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.2rem;
+      margin: 1.5rem 0;
+    }
+
+    .testimonial-card {
+      background: var(--bg-secondary);
+      padding: 1.5rem;
+      border-radius: 1.5rem;
+      border: 1px solid var(--border-color);
+      transition: all 0.3s ease;
+    }
+
+    .testimonial-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px -12px rgba(10, 26, 47, 0.15);
+    }
+
+    .testimonial-card .quote {
+      font-style: italic;
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .testimonial-card .author {
+      margin-top: 0.8rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .testimonial-card .role {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    /* ===== CONTACT FORM ===== */
+    .contact-form {
+      margin: 2rem 0;
+      padding: 1.5rem;
+      background: var(--bg-secondary);
+      border-radius: 1.5rem;
+      border: 1px solid var(--border-color);
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.3rem;
+      font-size: 0.9rem;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      border-radius: 1rem;
+      border: 1px solid var(--border-color);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-size: 0.95rem;
+      transition: border-color 0.3s ease;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #3b82c4;
+    }
+
+    .form-group textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .submit-btn {
+      background: #3b82c4;
+      color: white;
+      border: none;
+      padding: 0.8rem 2rem;
+      border-radius: 40px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .submit-btn:hover {
+      background: #2563a0;
+      transform: scale(1.02);
+    }
+
+    /* ===== INTERACTIVE FOOTER ===== */
+    .interactive-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 2.2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border-color);
+      gap: 0.8rem 1.5rem;
+    }
+
+    .like-box {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      background: var(--bg-secondary);
+      padding: 0.2rem 1.2rem 0.2rem 0.8rem;
+      border-radius: 60px;
+      border: 1px solid var(--border-color);
+    }
+
+    .like-btn {
+      background: none;
+      border: none;
+      font-size: 1.8rem;
+      cursor: pointer;
+      transition: 0.15s;
+      color: var(--text-muted);
+      padding: 0 0.2rem;
+    }
+
+    .like-btn:hover { transform: scale(1.1); color: #e1306c; }
+    .like-btn.liked { color: #e1306c; }
+
+    #likeCount {
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: var(--text-primary);
+      min-width: 2rem;
+    }
+
+    .footer-note {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .footer-note i { color: #3b82c4; }
+
+    /* ===== BACK TO TOP ===== */
+    #backToTop {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: #3b82c4;
+      color: white;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      border: none;
+      font-size: 1.3rem;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(59, 130, 196, 0.4);
+      transition: all 0.3s ease;
+      opacity: 0;
+      visibility: hidden;
+      z-index: 999;
+    }
+
+    #backToTop.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    #backToTop:hover {
+      transform: translateY(-4px) scale(1.05);
+      box-shadow: 0 12px 28px rgba(59, 130, 196, 0.5);
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 650px) {
+      .profile-card { padding: 1.5rem; }
+      .profile-header { flex-direction: column; align-items: flex-start; gap: 0.8rem; }
+      .title-group h1 { font-size: 2.1rem; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .testimonials-grid { grid-template-columns: 1fr; }
+      .avatar { width: 120px; height: 120px; }
+      .top-bar { flex-direction: column; align-items: stretch; }
+      .clock-display { text-align: center; }
+      .theme-toggle { justify-content: center; }
+    }
+
+    @media (max-width: 400px) {
+      .stats-grid { grid-template-columns: 1fr; }
+      .action-buttons { flex-direction: column; }
+      .action-btn { justify-content: center; }
+      .timeline-item { flex-direction: column; gap: 0.5rem; }
+    }
+
+    /* ===== PRINT STYLES ===== */
+    @media print {
+      .cursor-glow, #particles-canvas, #backToTop, .theme-toggle, .action-buttons {
+        display: none !important;
+      }
+      .profile-card {
+        box-shadow: none !important;
+        border: 1px solid #ddd !important;
+        backdrop-filter: none !important;
+        background: white !important;
+      }
+      body { background: white !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== READING PROGRESS ===== -->
+  <div id="progressBar"></div>
+
+  <!-- ===== CURSOR GLOW ===== -->
+  <div class="cursor-glow" id="cursorGlow"></div>
+
+  <!-- ===== PARTICLES CANVAS ===== -->
+  <canvas id="particles-canvas"></canvas>
+
+  <!-- ===== BACK TO TOP ===== -->
+  <button id="backToTop" aria-label="Back to top">
+    <i class="fas fa-arrow-up"></i>
+  </button>
+
+  <!-- ===== MAIN CARD ===== -->
+  <div class="profile-card" id="profileCard">
+
+    <!-- ===== TOP BAR ===== -->
+    <div class="top-bar">
+      <button class="theme-toggle" id="themeToggle">
+        <i class="fas fa-moon" id="themeIcon"></i>
+        <span id="themeText">Dark Mode</span>
+      </button>
+      <div class="clock-display">
+        <i class="fas fa-clock"></i>
+        <span id="liveClock">00:00:00</span>
+      </div>
+    </div>
+
+    <!-- ===== HEADER ===== -->
+    <div class="profile-header">
+      <div class="avatar-wrapper">
+        <img class="avatar" src="https://ui-avatars.com/api/?name=Your+Name&size=150&background=3b82c4&color=fff&bold=true&font-size=0.5" alt="Profile Avatar">
+        <span class="status-badge"><i class="fas fa-circle" style="font-size: 0.5rem; margin-right: 4px; color: #86efac;"></i> Available</span>
+      </div>
+      <div class="title-group">
+        <h1>Your Name</h1>
+        <div class="typing-container">
+          <span id="typingText"></span>
+          <span class="cursor"></span>
+        </div>
+        <div class="location">
+          <i class="fas fa-map-pin"></i> Your City, Country
+          <span style="opacity:0.3; margin:0 4px;">·</span>
+          <i class="far fa-calendar-alt"></i> 5+ years
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== ACTION BUTTONS ===== -->
+    <div class="action-buttons">
+      <button class="action-btn primary" id="downloadResume">
+        <i class="fas fa-download"></i> Download Resume
+      </button>
+      <button class="action-btn" id="shareProfile">
+        <i class="fas fa-share-alt"></i> Share Profile
+      </button>
+      <button class="action-btn" id="printProfile">
+        <i class="fas fa-print"></i> Print
+      </button>
+    </div>
+
+    <!-- ===== SOCIAL LINKS ===== -->
+    <div class="social-links">
+      <a href="#" class="social-btn github"><i class="fab fa-github"></i> GitHub</a>
+      <a href="#" class="social-btn linkedin"><i class="fab fa-linkedin-in"></i> LinkedIn</a>
+      <a href="#" class="social-btn twitter"><i class="fab fa-twitter"></i> Twitter</a>
+      <a href="#" class="social-btn instagram"><i class="fab fa-instagram"></i> Instagram</a>
+      <a href="#" class="social-btn youtube"><i class="fab fa-youtube"></i> YouTube</a>
+    </div>
+
+    <!-- ===== BIO ===== -->
+    <div class="bio-section">
+      <p><i class="fas fa-quote-left" style="opacity:0.3;"></i> Passionate full-stack developer with 5+ years of experience building scalable web applications. Expert in React, Node.js, and cloud architecture. Open-source contributor and tech speaker. <i class="fas fa-quote-right" style="opacity:0.3;"></i></p>
+    </div>
+
+    <!-- ===== STATS ===== -->
+    <div class="stats-grid">
+      <div class="stat-item"><span class="stat-number" id="statProjects">32</span><div class="stat-label">Projects</div></div>
+      <div class="stat-item"><span class="stat-number" id="statOpenSource">15</span><div class="stat-label">Open Source</div></div>
+      <div class="stat-item"><span class="stat-number" id="statFollowers">5.2k</span><div class="stat-label">Followers</div></div>
+      <div class="stat-item"><span class="stat-number" id="statViews">0</span><div class="stat-label">Profile Views</div></div>
+    </div>
+
+    <!-- ===== SKILLS WITH BARS ===== -->
+    <div class="skills-section">
+      <h3 style="margin-bottom: 1rem; color: var(--text-primary);"><i class="fas fa-code"></i> Technical Skills</h3>
+      <div class="skill-bar-item">
+        <div class="skill-bar-header"><span>React / Next.js</span><span>95%</span></div>
+        <div class="skill-bar-track"><div class="skill-bar-fill" data-width="95"></div></div>
+      </div>
+      <div class="skill-bar-item">
+        <div class="skill-bar-header"><span>Node.js / Express</span><span>90%</span></div>
+        <div class="skill-bar-track"><div class="skill-bar-fill" data-width="90"></div></div>
+      </div>
+      <div class="skill-bar-item">
+        <div class="skill-bar-header"><span>Python / Django</span><span>85%</span></div>
+        <div class="skill-bar-track"><div class="skill-bar-fill" data-width="85"></div></div>
+      </div>
+      <div class="skill-bar-item">
+        <div class="skill-bar-header"><span>MongoDB / SQL</span><span>88%</span></div>
+        <div class="skill-bar-track"><div class="skill-bar-fill" data-width="88"></div></div>
+      </div>
+      <div class="skill-bar-item">
+        <div class="skill-bar-header"><span>AWS / Docker</span><span>80%</span></div>
+        <div class="skill-bar-track"><div class="skill-bar-fill" data-width="80"></div></div>
+      </div>
+    </div>
+
+    <!-- ===== TIMELINE ===== -->
+    <div class="timeline-section">
+      <h3 style="margin-bottom: 1rem; color: var(--text-primary);"><i class="fas fa-briefcase"></i> Work Experience</h3>
+      <div class="timeline-item">
+        <div class="timeline-icon"><i class="fas fa-building"></i></div>
+        <div class="timeline-content">
+          <h4>Senior Full Stack Developer</h4>
+          <div class="company">TechCorp Inc.</div>
+          <div class="date"><i class="far fa-calendar-alt"></i> 2022 - Present</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-icon"><i class="fas fa-laptop-code"></i></div>
+        <div class="timeline-content">
+          <h4>Full Stack Developer</h4>
+          <div class="company">StartUpHub</div>
+          <div class="date"><i class="far fa-calendar-alt"></i> 2019 - 2022</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-icon"><i class="fas fa-graduation-cap"></i></div>
+        <div class="timeline-content">
+          <h4>B.S. Computer Science</h4>
+          <div class="company">Stanford University</div>
+          <div class="date"><i class="far fa-calendar-alt"></i> 2015 - 2019</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== TESTIMONIALS ===== -->
+    <div class="testimonials-section">
+      <h3 style="margin-bottom: 1rem; color: var(--text-primary);"><i class="fas fa-quote-right"></i> Testimonials</h3>
+      <div class="testimonials-grid">
+        <div class="testimonial-card">
+          <p class="quote">"One of the most talented developers I've worked with. Delivers high-quality code on time."</p>
+          <div class="author">John Doe</div>
+          <div class="role">CTO, TechCorp</div>
+        </div>
+        <div class="testimonial-card">
+          <p class="quote">"Exceptional problem-solving skills and a great team player. Highly recommended!"</p>
+          <div class="author">Jane Smith</div>
+          <div class="role">Lead Developer, StartUpHub</div>
+        </div>
+        <div class="testimonial-card">
+          <p class="quote">"Amazing attention to detail and a deep understanding of modern web technologies."</p>
+          <div class="author">Mike Johnson</div>
+          <div class="role">Product Manager</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== CONTACT FORM ===== -->
+    <div class="contact-form">
+      <h3 style="margin-bottom: 1rem; color: var(--text-primary);"><i class="fas fa-envelope"></i> Get In Touch</h3>
+      <form id="contactForm">
+        <div class="form-group">
+          <label for="formName">Your Name</label>
+          <input type="text" id="formName" placeholder="Enter your name" required>
+        </div>
+        <div class="form-group">
+          <label for="formEmail">Email Address</label>
+          <input type="email" id="formEmail" placeholder="Enter your email" required>
+        </div>
+        <div class="form-group">
+          <label for="formMessage">Message</label>
+          <textarea id="formMessage" placeholder="Write your message..." required></textarea>
+        </div>
+        <button type="submit" class="submit-btn"><i class="fas fa-paper-plane"></i> Send Message</button>
+      </form>
+    </div>
+
+    <!-- ===== INTERACTIVE FOOTER ===== -->
+    <div class="interactive-row">
+      <div class="like-box">
+        <button class="like-btn" id="likeBtn" aria-label="Like profile">
+          <i class="far fa-heart" id="heartIcon"></i>
+        </button>
+        <span id="likeCount">18</span>
+        <span style="font-size:0.75rem; color:var(--text-muted); margin-left: -0.2rem;">Likes</span>
+      </div>
+      <div class="footer-note">
+        <i class="fas fa-eye"></i>
+        <span id="viewCount">0</span> views
+        <span style="opacity:0.3; margin:0 0.5rem;">|</span>
+        <i class="fas fa-clock"></i>
+        <span id="greetingMessage">✨ Welcome!</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== JAVASCRIPT ===== -->
+  <script>
+    (function() {
+      'use strict';
+
+      // ============================================
+      // 1. THEME TOGGLE
+      // ============================================
+      const themeToggle = document.getElementById('themeToggle');
+      const themeIcon = document.getElementById('themeIcon');
+      const themeText = document.getElementById('themeText');
+      let darkMode = localStorage.getItem('darkMode') === 'true';
+
+      function applyTheme() {
+        if (darkMode) {
+          document.documentElement.setAttribute('data-theme', 'dark');
+          themeIcon.className = 'fas fa-sun';
+          themeText.textContent = 'Light Mode';
+        } else {
+          document.documentElement.removeAttribute('data-theme');
+          themeIcon.className = 'fas fa-moon';
+          themeText.textContent = 'Dark Mode';
+        }
+        localStorage.setItem('darkMode', darkMode);
+      }
+      applyTheme();
+
+      themeToggle.addEventListener('click', () => {
+        darkMode = !darkMode;
+        applyTheme();
+      });
+
+      // ============================================
+      // 2. LIVE CLOCK
+      // ============================================
+      function updateClock() {
+        const now = new Date();
+        const time = now.toLocaleTimeString('en-US', { hour12: false });
+        document.getElementById('liveClock').textContent = time;
+      }
+      updateClock();
+      setInterval(updateClock, 1000);
+
+      // ============================================
+      // 3. TYPING ANIMATION
+      // ============================================
+      const typingText = document.getElementById('typingText');
+      const roles = [
+        'Full Stack Developer',
+        'UI/UX Enthusiast',
+        'Open Source Contributor',
+        'Tech Speaker',
+        'Problem Solver'
+      ];
+      let roleIndex = 0;
+      let charIndex = 0;
+      let isDeleting = false;
+      let typingSpeed = 80;
+
+      function typeEffect() {
+        const currentRole = roles[roleIndex];
+        if (isDeleting) {
+          typingText.textContent = currentRole.substring(0, charIndex - 1);
+          charIndex--;
+          typingSpeed = 40;
+        } else {
+          typingText.textContent = currentRole.substring(0, charIndex + 1);
+          charIndex++;
+          typingSpeed = 100;
+        }
+
+        if (!isDeleting && charIndex === currentRole.length) {
+          isDeleting = true;
+          typingSpeed = 1500;
+        } else if (isDeleting && charIndex === 0) {
+          isDeleting = false;
+          roleIndex = (roleIndex + 1) % roles.length;
+          typingSpeed = 300;
+        }
+        setTimeout(typeEffect, typingSpeed);
+      }
+      typeEffect();
+
+      // ============================================
+      // 4. LIKE BUTTON
+      // ============================================
+      const likeBtn = document.getElementById('likeBtn');
+      const heartIcon = document.getElementById('heartIcon');
+      const likeCountSpan = document.getElementById('likeCount');
+      let likeCount = parseInt(likeCountSpan.textContent, 10) || 18;
+      let isLiked = localStorage.getItem('profileLiked') === 'true';
+
+      if (isLiked) {
+        heartIcon.className = 'fas fa-heart';
+        likeBtn.classList.add('liked');
+        const storedCount = localStorage.getItem('profileLikeCount');
+        if (storedCount) {
+          const parsed = parseInt(storedCount, 10);
+          if (!isNaN(parsed)) likeCount = parsed;
+          likeCountSpan.textContent = likeCount;
+        }
+      }
+
+      likeBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (!isLiked) {
+          likeCount += 1;
+          heartIcon.className = 'fas fa-heart';
+          likeBtn.classList.add('liked');
+          isLiked = true;
+        } else {
+          likeCount -= 1;
+          heartIcon.className = 'far fa-heart';
+          likeBtn.classList.remove('liked');
+          isLiked = false;
+        }
+        likeCountSpan.textContent = likeCount;
+        localStorage.setItem('profileLiked', isLiked ? 'true' : 'false');
+        localStorage.setItem('profileLikeCount', String(likeCount));
+      });
+
+      // ============================================
+      // 5. PROFILE VIEWS COUNTER
+      // ============================================
+      let viewCount = parseInt(localStorage.getItem('profileViews') || '0', 10);
+      if (!sessionStorage.getItem('viewCounted')) {
+        viewCount += 1;
+        localStorage.setItem('profileViews', String(viewCount));
+        sessionStorage.setItem('viewCounted', 'true');
+      }
+      document.getElementById('viewCount').textContent = viewCount;
+      document.getElementById('statViews').textContent = viewCount;
+
+      // ============================================
+      // 6. GREETING
+      // ============================================
+      const greetingSpan = document.getElementById('greetingMessage');
+      function updateGreeting() {
+        const hour = new Date().getHours();
+        let msg = '';
+        if (hour < 12) msg = '☀️ Good morning!';
+        else if (hour < 17) msg = '🌤️ Good afternoon!';
+        else if (hour < 21) msg = '🌅 Good evening!';
+        else msg = '🌙 Good night!';
+        greetingSpan.textContent = msg + ' · Your Profile';
+      }
+      updateGreeting();
+
+      // ============================================
+      // 7. SKILL BARS ANIMATION
+      // ============================================
+      const skillBars = document.querySelectorAll('.skill-bar-fill');
+      function animateSkillBars() {
+        skillBars.forEach((bar, index) => {
+          const width = bar.getAttribute('data-width');
+          setTimeout(() => {
+            bar.style.width = width + '%';
+          }, index * 200);
+        });
+      }
+      // Trigger on load
+      window.addEventListener('load', () => {
+        setTimeout(animateSkillBars, 500);
+      });
+
+      // ============================================
+      // 8. BACK TO TOP
+      // ============================================
+      const backToTopBtn = document.getElementById('backToTop');
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 300) {
+          backToTopBtn.classList.add('visible');
+        } else {
+          backToTopBtn.classList.remove('visible');
+        }
+      });
+      backToTopBtn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      // ============================================
+      // 9. READING PROGRESS
+      // ============================================
+      const progressBar = document.getElementById('progressBar');
+      window.addEventListener('scroll', () => {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = (scrollTop / docHeight) * 100;
+        progressBar.style.width = progress + '%';
+      });
+
+      // ============================================
+      // 10. CURSOR GLOW
+      // ============================================
+      const cursorGlow = document.getElementById('cursorGlow');
+      document.addEventListener('mousemove', (e) => {
+        cursorGlow.style.left = e.clientX + 'px';
+        cursorGlow.style.top = e.clientY + 'px';
+      });
+
+      // ============================================
+      // 11. PARTICLES
+      // ============================================
+      const canvas = document.getElementById('particles-canvas');
+      const ctx = canvas.getContext('2d');
+      let particles = [];
+
+      function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      resizeCanvas();
+      window.addEventListener('resize', resizeCanvas);
+
+      class Particle {
+        constructor() {
+          this.x = Math.random() * canvas.width;
+          this.y = Math.random() * canvas.height;
+          this.size = Math.random() * 2 + 0.5;
+          this.speedX = (Math.random() - 0.5) * 0.5;
+          this.speedY = (Math.random() - 0.5) * 0.5;
+          this.opacity = Math.random() * 0.3 + 0.1;
+        }
+        update() {
+          this.x += this.speedX;
+          this.y += this.speedY;
+          if (this.x > canvas.width) this.x = 0;
+          if (this.x < 0) this.x = canvas.width;
+          if (this.y > canvas.height) this.y = 0;
+          if (this.y < 0) this.y = canvas.height;
+        }
+        draw() {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(59, 130, 196, ${this.opacity})`;
+          ctx.fill();
+        }
+      }
+
+      for (let i = 0; i < 60; i++) {
+        particles.push(new Particle());
+      }
+
+      function animateParticles() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(p => {
+          p.update();
+          p.draw();
+        });
+        requestAnimationFrame(animateParticles);
+      }
+      animateParticles();
+
+      // ============================================
+      // 12. SHARE PROFILE
+      // ============================================
+      document.getElementById('shareProfile').addEventListener('click', () => {
+        const url = window.location.href;
+        if (navigator.share) {
+          navigator.share({
+            title: 'Check out my profile!',
+            url: url
+          }).catch(() => {});
+        } else {
+          navigator.clipboard.writeText(url).then(() => {
+            alert('Profile link copied to clipboard! 📋');
+          }).catch(() => {
+            prompt('Copy this link:', url);
+          });
+        }
+      });
+
+      // ============================================
+      // 13. PRINT PROFILE
+      // ============================================
+      document.getElementById('printProfile').addEventListener('click', () => {
+        window.print();
+      });
+
+      // ============================================
+      // 14. DOWNLOAD RESUME (demo)
+      // ============================================
+      document.getElementById('downloadResume').addEventListener('click', () => {
+        alert('📄 Resume download would start here!\n(Add your actual PDF file)');
+      });
+
+      // ============================================
+      // 15. CONTACT FORM
+      // ============================================
+      document.getElementById('contactForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const name = document.getElementById('formName').value.trim();
+        const email = document.getElementById('formEmail').value.trim();
+        const message = document.getElementById('formMessage').value.trim();
+
+        if (!name || !email || !message) {
+          alert('⚠️ Please fill in all fields.');
+          return;
+        }
+
+        if (!email.includes('@') || !email.includes('.')) {
+          alert('⚠️ Please enter a valid email address.');
+          return;
+        }
+
+        alert('✅ Message sent successfully!\n\nName: ' + name + '\nEmail: ' + email + '\nMessage: ' + message);
+        this.reset();
+      });
+
+      console.log('✅ Premium Profile Website loaded with 16+ features!');
+    })();
+  </script>
+</body>
+</html>
